@@ -5,8 +5,8 @@ import dotenv from 'dotenv'
 
 import { UserRouter } from "./routes/User_route.js"
 
-const app = express()
 dotenv.config()
+const app = express()
 
 app.use(express.json())
 app.use(cors())
