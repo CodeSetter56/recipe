@@ -31,16 +31,16 @@ router.put("/",async(req,res)=>{
         const user = await UserModel.findById(req.body.userID)
         user.saved.push(recipe)
         await user.save()
-        res.json({savedrecipes:user.saved})
+        res.json({saved:user.saved})
     } catch (error) {
         res.json(error)
     }
 })
 
-router.get("/saved/ids",async(req,res)=>{
+router.get("/saved/ids/:userID",async(req,res)=>{
     try {
-        const user = await UserModel.findById(req.body.userID)
-        res.json({savedrecipes:user?.saved})
+        const user = await UserModel.findById(req.params.userID)
+        res.json({saved:user?.saved})
     } catch (error) {
         res.json(error)
     }
@@ -49,8 +49,8 @@ router.get("/saved/ids",async(req,res)=>{
 router.get("/saved",async(req,res)=>{
     try {
         const user = await UserModel.findById(req.body.userID)
-        const savedRecipes = await RecipeModel.find({_id:{$in:user.saved}})
-        res.json({savedRecipes})
+        const saved = await RecipeModel.find({_id:{$in:user.saved}})
+        res.json({saved})
     } catch (error) {
         res.json(error)
     }
