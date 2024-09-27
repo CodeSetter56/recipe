@@ -1,72 +1,81 @@
-import React, { useEffect } from 'react'
-import { useState } from 'react'
+import React, { useEffect } from 'react';
+import { useState } from 'react';
 import { useCookies } from "react-cookie";
-import axios from 'axios'
+import axios from 'axios';
 
 import { useGetid } from '../hooks/useGetId';
 
 function Home() {
 
-  const [recipe, setRecipe] = useState([])
-  const [savedrecipes, setSavedrecipes] = useState([])
-  const [cookies,_] = useCookies(["access_token"]);
-  const userID = useGetid()
+  const [recipe, setRecipe] = useState([]);
+  const [savedrecipes, setSavedrecipes] = useState([]);
+  const [cookies, _] = useCookies(["access_token"]);
+  const userID = useGetid();
 
-  useEffect(()=>{
-    const fetchRecipe = async () =>{
+  useEffect(() => {
+    const fetchRecipe = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/recipe")
-        setRecipe(res.data)
+        const res = await axios.get("http://localhost:3000/recipe");
+        setRecipe(res.data);
       } catch (error) {
         console.error(error);
       }
-    }
-    const fetchSavedrecipe = async () =>{
+    };
+    const fetchSavedrecipe = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/recipe/saved/ids/${userID}`)
-        setSavedrecipes(res.data.saved)
+        const res = await axios.get(`http://localhost:3000/recipe/saved/ids/${userID}`);
+        setSavedrecipes(res.data.saved);
       } catch (error) {
         console.error(error);
       }
-    }
-    fetchRecipe()
-    if(cookies.access_token)fetchSavedrecipe()
-  },[])
+    };
+    fetchRecipe();
+    if (cookies.access_token) fetchSavedrecipe();
+  }, []);
 
-  const saveRecipe = async(recipeID)=>{
+  const saveRecipe = async (recipeID) => {
     try {
-      const res = await axios.put("http://localhost:3000/recipe",{recipeID,userID},
-        {headers:{authorization : cookies.access_token}})
-      alert("Saved Recipe")
+      const res = await axios.put("http://localhost:3000/recipe", { recipeID, userID },
+        { headers: { authorization: cookies.access_token } });
+      alert("Saved Recipe");
       setSavedrecipes(res.data.saved);
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
-  const isSaved = (id) => savedrecipes.includes(id)
+  const isSaved = (id) => savedrecipes.includes(id);
 
   return (
     <div>
       <h1 className='p-4'>Recipes</h1>
       <ul className="d-flex flex-wrap list-unstyled p-0">
-        {recipe.map((r)=>(
+        {recipe.map((r) => (
           <li className='p-5' key={r._id}>
-            <div className="card p-3" style={{ width: "20rem", height: "30rem" }}>
-            <img src={r.imgURL} className="card-img-top" alt={r.name} style={{ height: "15rem" }}/>
-              <div className="card-body">
-              <h5 className="card-title">{r.name}</h5>
-              <p className="card-text" style={{ height: "5rem" }}>{r.instructions}</p>
-              <button type='button' className="btn btn-primary" onClick={()=>saveRecipe(r._id)} disabled={isSaved(r._id)}>
-                {isSaved(r._id)?"Saved":"Save"}
-              </button>
+            <div className="card p-3" style={{ width: "20rem", height: "28rem", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+              <img src={r.imgURL} className="card-img-top" alt={r.name} style={{ height: "12rem", objectFit: "cover" }} />
+              <div className="card-body d-flex flex-column justify-content-between">
+                <h5 className="card-title">{r.name}</h5>
+                <div className="ingredients-container " style={{ height: "2.5rem", overflowY: "hidden", textOverflow: "ellipsis" }}>
+                  <ul className="d-flex flex-wrap list-unstyled" style={{ maxHeight: "2.5rem", overflowY: "auto", marginBottom: "1rem" }}>
+                    {r.ingredients.map((i, idx) => (
+                      <li key={idx} className='m-1 p-1 text-center' style={{ background: "lightgrey", color: "grey", width: "5vw", borderRadius: "10px" }}>{i}</li>
+                    ))}
+                  </ul>
+                </div>
+                <p className="card-text" style={{ height: "4rem", overflowY: "auto", scrollbarWidth: "none", msOverflowStyle: "none" }}>
+                  {r.instructions}
+                </p>
+                <button type='button' className="btn btn-primary " onClick={() => saveRecipe(r._id)} disabled={isSaved(r._id)} style={{width:"5vw"}}>
+                  {isSaved(r._id) ? "Saved" : "Save"}
+                </button>
               </div>
             </div>
           </li>
         ))}
       </ul>
     </div>
-  )
+  );
 }
 
-export default Home
+export default Home;
