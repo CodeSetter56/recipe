@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios'
-import { useGetid } from '../hooks/useGetId';
 import { useNavigate } from 'react-router-dom';
+import { useCookies } from "react-cookie";
+
+import { useGetid } from '../hooks/useGetId';
 
 function Create() {
   const getid = useGetid()
   const navigate = useNavigate()
+  const [cookies,_] = useCookies(["access_token"]);
   const [recipe, setRecipe] = useState({
     name: "",
     ingredients: [],
@@ -36,7 +39,9 @@ function Create() {
   const formSubmit = async (e) =>{
     e.preventDefault()
     try {
-      await axios.post("http://localhost:3000/recipe",recipe)
+      await axios.post("http://localhost:3000/recipe",recipe,
+        {headers:{authorization : cookies.access_token}}
+      )
       alert("Recipe created")
       navigate("/")
     } catch (error) {

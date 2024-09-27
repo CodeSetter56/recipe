@@ -1,12 +1,15 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react'
+import { useCookies } from "react-cookie";
 import axios from 'axios'
+
 import { useGetid } from '../hooks/useGetId';
 
 function Home() {
 
   const [recipe, setRecipe] = useState([])
   const [savedrecipes, setSavedrecipes] = useState([])
+  const [cookies,_] = useCookies(["access_token"]);
   const userID = useGetid()
 
   useEffect(()=>{
@@ -27,13 +30,14 @@ function Home() {
       }
     }
     fetchRecipe()
-    fetchSavedrecipe()
+    if(cookies.access_token)fetchSavedrecipe()
   },[])
 
   const saveRecipe = async(recipeID)=>{
     try {
-      const res = await axios.put("http://localhost:3000/recipe",{recipeID,userID})
-      alert("Recipe")
+      const res = await axios.put("http://localhost:3000/recipe",{recipeID,userID},
+        {headers:{authorization : cookies.access_token}})
+      alert("Saved Recipe")
       setSavedrecipes(res.data.saved);
     } catch (error) {
       console.error(error);
