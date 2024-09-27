@@ -3,7 +3,7 @@ import axios from "axios";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 
-function Auth() {
+function Auth(){
   return (
     <div className="container my-5">
       <div className="row justify-content-center">
@@ -23,7 +23,7 @@ export default Auth;
 const Register = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(null); // State for error handling
+  const [error, setError] = useState(null); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,7 +50,7 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const [_, setCookie] = useCookies(["access_token"]);
     const navigate = useNavigate();
-    const [error, setError] = useState(null); // State for error handling
+    const [error, setError] = useState(null);
   
     const handleSubmit = async (e) => {
       e.preventDefault();
@@ -62,7 +62,7 @@ const Login = () => {
           window.localStorage.setItem("userId", response.data.UserId);
           navigate("/"); 
         } else {
-          setError("Login failed. Please check your credentials and try again.");
+          setError("Login failed");
         }
       } catch (error) {
         setError(error.response ? error.response.data.message : "Invalid credentials");
