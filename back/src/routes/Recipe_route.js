@@ -26,6 +26,7 @@ router.post("/",verifyToken,async(req,res)=>{
     }
 })
 
+//saving 
 router.put("/",verifyToken,async(req,res)=>{
     try {
         const recipe = await RecipeModel.findById(req.body.recipeID)
@@ -68,5 +69,25 @@ router.get("/saved/:userID",async(req,res)=>{
         res.json(error)
     }
 })
+
+//editing
+router.put("/:recipeID", verifyToken, async (req, res) => {
+    try {
+      const updatedRecipe = await RecipeModel.findByIdAndUpdate(req.params.recipeID, req.body, { new: true });
+      res.json(updatedRecipe);
+    } catch (error) {
+      res.json(error);
+    }
+});
+
+router.get("/:recipeID", async (req, res) => {
+    try {
+      const recipe = await RecipeModel.findById(req.params.recipeID);
+      if (!recipe) return res.status(404).send("Recipe not found");
+      res.json(recipe);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  });
 
 export {router as RecipeRouter}

@@ -57,6 +57,10 @@ function Home() {
     }
   };
 
+  const editRecipe = (recipeID) => {
+    navigate(`/edit/${recipeID}`);
+  }
+
   return (
     <div>
       <h1 className='p-4'>Recipes</h1>
@@ -77,9 +81,16 @@ function Home() {
                 <p className="card-text" style={{ height: "4rem", overflowY: "auto", scrollbarWidth: "none", msOverflowStyle: "none" }}>
                   {r.instructions}
                 </p>
-                <button type='button' className={`btn ${!isSaved(r._id)?'btn-primary':'btn-secondary'}`} onClick={() => saveRecipe(r._id)} style={{width:"5vw"}}>
-                  {isSaved(r._id) ? "Saved" : "Save"}
-                </button>
+                <div className="d-flex justify-content-between align-items-center mt-3">
+                  <button type='button' className={`btn ${!isSaved(r._id) ? 'btn-primary' : 'btn-secondary'}`} onClick={() => saveRecipe(r._id)} style={{ width: "45%" }}>
+                    {isSaved(r._id) ? "Saved" : "Save"}
+                  </button>
+                  {r.chef === userID && (
+                    <button type='button' className='btn btn-warning' style={{ width: "45%" }} onClick={() => editRecipe(r._id)}>
+                      Edit
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </li>

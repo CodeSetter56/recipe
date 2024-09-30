@@ -45,6 +45,11 @@ function Saved() {
     fetchSavedrecipe();
   }, [userID, cookies.access_token, navigate]);
 
+  const editRecipe = (recipeID) => {
+    navigate(`/edit/${recipeID}`);
+  }
+
+
   return (
     <div>
       <h1 className='p-4'>Saved Recipes</h1>
@@ -68,9 +73,16 @@ function Saved() {
                   <p className="card-text" style={{ height: "4rem", overflowY: "auto", scrollbarWidth: "none", msOverflowStyle: "none" }}>
                     {r.instructions}
                   </p>
-                  <button type='button' className="btn btn-danger" onClick={() => deleteRecipe(r._id)} style={{width:"6vw"}}>
-                    Remove
-                  </button>
+                  <div className="d-flex justify-content-between align-items-center mt-3">
+                    <button type='button' className="btn btn-danger" onClick={() => deleteRecipe(r._id)} style={{width:"45%"}}>
+                      Remove
+                    </button>
+                    {r.chef === userID && (
+                      <button type='button' className='btn btn-warning' style={{ width: "45%" }} onClick={() => editRecipe(r._id)}>
+                        Edit
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             </li>
