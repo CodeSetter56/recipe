@@ -38,6 +38,18 @@ router.put("/",verifyToken,async(req,res)=>{
     }
 })
 
+router.delete("/:recipeID",verifyToken,async(req,res)=>{
+    try {
+        const recipe = await RecipeModel.findById(req.params.recipeID)
+        const user = await UserModel.findById(req.body.userID)
+        user.saved.pull(recipe)
+        await user.save()
+        res.json({saved:user.saved})
+    } catch (error) {
+        res.json(error)
+    }
+})
+
 router.get("/saved/ids/:userID",async(req,res)=>{
     try {
         const user = await UserModel.findById(req.params.userID)

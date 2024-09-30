@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { useCookies } from "react-cookie";
 import axios from 'axios';
-
+import { useNavigate } from 'react-router-dom';
 import { useGetid } from '../hooks/useGetId';
 
 function Home() {
@@ -11,6 +11,7 @@ function Home() {
   const [savedrecipes, setSavedrecipes] = useState([]);
   const [cookies, _] = useCookies(["access_token"]);
   const userID = useGetid();
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchRecipe = async () => {
@@ -33,18 +34,28 @@ function Home() {
     if (cookies.access_token) fetchSavedrecipe();
   }, []);
 
+  const isSaved = (id) => savedrecipes.includes(id);
+  
   const saveRecipe = async (recipeID) => {
     try {
-      const res = await axios.put("http://localhost:3000/recipe", { recipeID, userID },
-        { headers: { authorization: cookies.access_token } });
-      alert("Saved Recipe");
-      setSavedrecipes(res.data.saved);
+      if (!isSaved(recipeID)) { 
+        const res = await axios.put("http://localhost:3000/recipe", { recipeID, userID },
+          { headers: { authorization: cookies.access_token } });
+        alert("Saved Recipe");
+        setSavedrecipes(res.data.saved);
+      } else {
+        const res = await axios.delete(`http://localhost:3000/recipe/${recipeID}`, {
+          data: { userID },
+          headers: { authorization: cookies.access_token }
+        });
+        alert("Removed Recipe");
+        setSavedrecipes(res.data.saved);
+      }
     } catch (error) {
+      navigate("/auth");
       console.error(error);
     }
   };
-
-  const isSaved = (id) => savedrecipes.includes(id);
 
   return (
     <div>
@@ -66,7 +77,7 @@ function Home() {
                 <p className="card-text" style={{ height: "4rem", overflowY: "auto", scrollbarWidth: "none", msOverflowStyle: "none" }}>
                   {r.instructions}
                 </p>
-                <button type='button' className="btn btn-primary " onClick={() => saveRecipe(r._id)} disabled={isSaved(r._id)} style={{width:"5vw"}}>
+                <button type='button' className={`btn ${!isSaved(r._id)?'btn-primary':'btn-secondary'}`} onClick={() => saveRecipe(r._id)} style={{width:"5vw"}}>
                   {isSaved(r._id) ? "Saved" : "Save"}
                 </button>
               </div>
