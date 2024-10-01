@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
+import { renderurl } from '../renderurl';
 
 function Edit() {
   const { id } = useParams(); 
@@ -19,7 +20,7 @@ function Edit() {
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/recipe/${id}`, {
+        const res = await axios.get(`${renderurl}/recipe/${id}`, {
           headers: { authorization: cookies.access_token }
         });
         setRecipe(res.data);
@@ -51,7 +52,7 @@ function Edit() {
   const formSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:3000/recipe/${id}`, recipe, {
+      await axios.put(`${renderurl}/recipe/${id}`, recipe, {
         headers: { authorization: cookies.access_token }
       });
       alert("Recipe updated");

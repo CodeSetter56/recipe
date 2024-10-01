@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from "react-cookie";
-
+import { renderurl } from '../renderurl';
 import { useGetid } from '../hooks/useGetId';
 
 function Create() {
@@ -39,7 +39,7 @@ function Create() {
   const formSubmit = async (e) =>{
     e.preventDefault()
     try {
-      await axios.post("http://localhost:3000/recipe",recipe,
+      await axios.post(`${renderurl}/recipe`,recipe,
         {headers:{authorization : cookies.access_token}}
       )
       alert("Recipe created")

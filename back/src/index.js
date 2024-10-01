@@ -12,11 +12,19 @@ const app = express()
 app.use(express.json())
 app.use(cors());
 
-app.use("/auth",UserRouter)
-app.use("/recipe",RecipeRouter)
+app.get('/', (req, res) => {
+    res.send("server is running");
+});
+
+app.use("/auth", UserRouter)
+app.use("/recipe", RecipeRouter)
 
 mongoose.connect(process.env.MONGO_API)
-
-app.listen(process.env.PORT,()=>{
-    console.log(`server started at: ${process.env.PORT}`);
-})  
+    .then(() => {
+        app.listen(process.env.PORT, () => {
+            console.log(`Server started at: ${process.env.PORT}`);
+        });
+    })
+    .catch(err => {
+        console.error('Database connection error:', err);
+    });

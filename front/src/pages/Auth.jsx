@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from "axios";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
+import { renderurl } from '../renderurl';
 
 function Auth(){
   return (
@@ -28,7 +29,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:3000/auth/register", { username, password });
+      await axios.post(`${renderurl}/auth/register`, { username, password });
       alert("Registered successfully");
     } catch (error) {
       setError(error.response ? error.response.data.message : "Registration failed");
@@ -55,7 +56,7 @@ const Login = () => {
     const handleSubmit = async (e) => {
       e.preventDefault();
       try {
-        const response = await axios.post("http://localhost:3000/auth/login", { username, password });
+        const response = await axios.post(`${renderurl}/auth/login`, { username, password });
   
         if (response.status === 200 && response.data.token && response.data.UserId) {
           setCookie("access_token", response.data.token);

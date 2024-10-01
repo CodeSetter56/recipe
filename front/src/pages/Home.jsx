@@ -4,6 +4,7 @@ import { useCookies } from "react-cookie";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useGetid } from '../hooks/useGetId';
+import { renderurl } from '../renderurl';
 
 function Home() {
 
@@ -16,7 +17,7 @@ function Home() {
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/recipe");
+        const res = await axios.get(`${renderurl}/recipe`);
         setRecipe(res.data);
       } catch (error) {
         console.error(error);
@@ -24,7 +25,7 @@ function Home() {
     };
     const fetchSavedrecipe = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/recipe/saved/ids/${userID}`);
+        const res = await axios.get(`${renderurl}/recipe/saved/ids/${userID}`);
         setSavedrecipes(res.data.saved);
       } catch (error) {
         console.error(error);
@@ -39,12 +40,12 @@ function Home() {
   const saveRecipe = async (recipeID) => {
     try {
       if (!isSaved(recipeID)) { 
-        const res = await axios.put("http://localhost:3000/recipe", { recipeID, userID },
+        const res = await axios.put(`${renderurl}/recipe`, { recipeID, userID },
           { headers: { authorization: cookies.access_token } });
         alert("Saved Recipe");
         setSavedrecipes(res.data.saved);
       } else {
-        const res = await axios.delete(`http://localhost:3000/recipe/${recipeID}`, {
+        const res = await axios.delete(`${renderurl}/recipe/${recipeID}`, {
           data: { userID },
           headers: { authorization: cookies.access_token }
         });

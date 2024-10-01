@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useGetid } from '../hooks/useGetId';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from "react-cookie";
+import { renderurl } from '../renderurl';
 
 function Saved() {
   const [savedrecipes, setSavedrecipes] = useState([]);
@@ -16,7 +17,7 @@ function Saved() {
       return;
     }
     try {
-      const res = await axios.get(`http://localhost:3000/recipe/saved/${userID}`, {
+      const res = await axios.get(`${renderurl}/recipe/saved/${userID}`, {
         headers: { authorization: cookies.access_token }
       });
       setSavedrecipes(res.data.saved || []); 
@@ -29,12 +30,12 @@ function Saved() {
   const deleteRecipe = async (recipeID) => {
     try {
       setSavedrecipes((prevRecipes) => prevRecipes.filter((recipe) => recipe._id !== recipeID));
-      await axios.delete(`http://localhost:3000/recipe/${recipeID}`, {
+      await axios.delete(`${renderurl}/recipe/${recipeID}`, {
         data: { userID },
         headers: { authorization: cookies.access_token }
       });  
       alert("Recipe Removed");
-      fetchSavedrecipe()
+      fetchSavedrecipe();
     } catch (error) {
       console.error(error);
       navigate("/");
@@ -48,7 +49,6 @@ function Saved() {
   const editRecipe = (recipeID) => {
     navigate(`/edit/${recipeID}`);
   }
-
 
   return (
     <div>
