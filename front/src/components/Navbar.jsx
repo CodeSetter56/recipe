@@ -23,8 +23,9 @@ function Navbar() {
     <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div className="navbar-nav">
         <Link className="nav-link" to={"/"}>Home</Link>
-        <Link className="nav-link" to={"/create"}>Create recipes</Link>
+        {(cookie.access_token) && <Link className="nav-link" to={"/create"}>Create recipes</Link>}
         {(cookie.access_token) && <Link className="nav-link" to={"/saved"}>Saved recipes</Link>}
+        {(cookie.access_token) && <Link className="nav-link" to={"/your"}>Your recipes</Link>}
       </div>
     </div>
     {!cookie.access_token?
