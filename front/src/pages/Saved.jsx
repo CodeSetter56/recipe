@@ -27,7 +27,7 @@ function Saved() {
     }
   };
 
-  const deleteRecipe = async (recipeID) => {
+  const removeRecipe = async (recipeID) => {
     try {
       setSavedrecipes((prevRecipes) => prevRecipes.filter((recipe) => recipe._id !== recipeID));
       await axios.delete(`${renderurl}/recipe/${recipeID}`, {
@@ -74,9 +74,9 @@ function Saved() {
                     {r.instructions}
                   </p>
                   <div className="d-flex justify-content-between align-items-center mt-3">
-                    <button type='button' className="btn btn-danger" onClick={() => deleteRecipe(r._id)} style={{width:"45%"}}>
-                      Remove
-                    </button>
+                  <button type='button' className={`btn btn-secondary`} onClick={() => removeRecipe(r._id)} style={{ width: "45%" }}>
+                   Saved
+                  </button>
                     {r.chef === userID && (
                       <button type='button' className='btn btn-warning' style={{ width: "45%" }} onClick={() => editRecipe(r._id)}>
                         Edit
